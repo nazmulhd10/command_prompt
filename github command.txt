@@ -1,0 +1,37 @@
+1) Initialize Git
+git init
+
+2) connect git with GitHub repository
+git remote remove origin           // if remove origin
+git remote add origin https://github.com/yourusername/my-business-project.git
+
+
+3) Create .gitignore file
+
+4) Local branch নাম চেঞ্জ করো master -> main
+git branch -m master main
+
+5) রিমোটের সাথে নতুন main কে লিঙ্ক করো
+git fetch origin
+git branch --set-upstream-to=origin/main main
+
+6) সব ফাইল অ্যাড করো এবং কমিট করো
+git add .
+git commit -m "Initial commit for business project"
+
+
+7) GitHub এ পুশ করো
+git branch -M main
+git push -u origin main
+or
+git push --force origin main
+
+or
+যদি GitHub এর ফাইল (যেমন README.md) রাখতেই চাও, তাহলে:
+git pull origin main --allow-unrelated-histories
+তারপর কনফ্লিক্ট হলে ঠিক করো (VS Code বা GitHub Desktop দিয়ে সহজ হয়), তারপর:
+git add .
+git commit -m "Merged remote with local"
+git push -u origin main
+
+
