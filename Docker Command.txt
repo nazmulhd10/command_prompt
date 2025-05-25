@@ -1,0 +1,27 @@
+1. Build project to docker
+docker build -t dbbl-ocr-app .
+
+2. Run project from docker
+docker run --env-file .env -p 8080:8080 dbbl-ocr-app
+or
+docker run -p 8080:8080 dbbl-ocr-app
+
+3. Google Cloud SDK কনফিগার
+gcloud auth login
+gcloud config set project dbblweb
+gcloud services enable run.googleapis.com
+gcloud services enable artifactregistry.googleapis.com
+
+4. GCP Container Registry-তে Docker Image পুশ
+docker tag dbbl-ocr-app gcr.io/YOUR_PROJECT_ID/dbbl-ocr-app
+docker push gcr.io/YOUR_PROJECT_ID/dbbl-ocr-app
+
+5. Deploy cloud container
+<!-- gcloud run deploy dbbl-ocr-app --image gcr.io/dbblweb/dbbl-ocr-app --platform managed --region asia-south2 --allow-unauthenticated --memory 2Gi --cpu 1 --min-instances 1 --max-instances 3 --timeout 300 --port 8080 -->
+
+gcloud run deploy dbbl-ocr-app --image gcr.io/dbblweb/dbbl-ocr-app --platform managed --region asia-south2 --allow-unauthenticated --memory 32Gi --cpu 8 --min-instances 1 --max-instances 3 --timeout 600 --port 8080 --update-env-vars PYTHONUNBUFFERED=1,GUNICORN_CMD_ARGS="--workers=3 --timeout=120"
+
+<!-- gcloud run deploy dbbl-ocr-app --image gcr.io/dbblweb/dbbl-ocr-app --platform managed --region asia-south2 --allow-unauthenticated --memory 4Gi --cpu 2 --min-instances 1 --max-instances 3 --timeout 600 --port 8080 --concurrency 10 --set-env-vars="MALLOC_ARENA_MAX=2,PYTHONMALLOC=malloc" -->
+
+
+
