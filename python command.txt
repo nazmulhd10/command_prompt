@@ -1,0 +1,145 @@
+1. Virtual Environment Setup
+============================
+# Install venv if not available (optional)
+python -m pip install --upgrade pip
+
+# Create virtual environment
+python -m venv venv
+
+# Activate venv
+# 👉 Windows
+venv\Scripts\activate
+
+# 👉 Linux / macOS
+source venv/bin/activate
+
+
+2. Install Packages
+===================
+# Install common packages
+pip install django flask fastapi uvicorn djangorestframework
+
+# Optional utilities for development
+pip install python-decouple black isort pylint
+
+# Save all installed packages to requirements.txt
+pip freeze > requirements.txt
+
+
+3. Requirements File Handling
+=============================
+# Install from requirements.txt
+pip install -r requirements.txt
+
+
+4. Django Commands
+===================
+# Create Django project
+django-admin startproject myproject
+
+# Go inside project folder
+cd myproject
+
+# Run development server
+python manage.py runserver
+
+# Create new app
+python manage.py startapp myapp
+
+# Apply migrations
+python manage.py makemigrations
+python manage.py migrate
+
+# Create superuser for admin panel
+python manage.py createsuperuser
+
+# Collect static files (for production)
+python manage.py collectstatic
+
+5. Django REST Framework (DRF) Setup
+====================================
+# Install DRF
+pip install djangorestframework
+
+# Add 'rest_framework' in `INSTALLED_APPS` of `settings.py`
+
+# Sample DRF View
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+class HelloView(APIView):
+    def get(self, request):
+        return Response({"message": "Hello from DRF!"})
+
+
+6. Flask Commands
+=================
+# Create simple Flask app
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello from Flask!"
+
+# Run the app
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+7. ========================
+# Run Flask app via terminal
+# Set FLASK_APP env variable
+export FLASK_APP=app.py          # Linux/macOS
+set FLASK_APP=app.py             # Windows
+flask run
+
+8. FastAPI Commands
+=====================
+# Create a FastAPI app
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello from FastAPI!"}
+
+# Run FastAPI using uvicorn
+uvicorn main:app --reload
+
+
+9. API Testing Tools
+====================
+pip install httpie      # Better curl alternative
+http GET http://127.0.0.1:8000/
+
+pip install requests    # Python HTTP client (used in code)
+
+
+10. PostgreSQL Integration (Business DB)
+=======================================
+# Install PostgreSQL driver
+pip install psycopg2-binary
+
+# Example Django settings
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbname',
+        'USER': 'dbuser',
+        'PASSWORD': 'dbpass',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+
+11. Deployment Preparation
+==========================
+# Production server (optional)
+pip install gunicorn whitenoise
+
+# Deploy to Heroku / Railway / Render: Add Procfile
+echo "web: gunicorn myproject.wsgi:application" > Procfile
