@@ -1,0 +1,78 @@
+1. Build project to docker
+==========================
+docker build -t dbbl-ocr-app .
+
+2. Run project from docker
+==========================
+docker run --env-file .env -p 8080:8080 dbbl-ocr-app
+or
+docker run -p 8080:8080 dbbl-ocr-app
+
+
+3. AWS CLI ইনস্টল ও কনফিগার করুন
+===============================
+⬇️ ইনস্টল:
+Download AWS CLI : https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+
+⚙️ কনফিগার:
+aws configure
+প্রশ্ন আসবে:
+
+AWS Access Key: ➡️ IAM user থেকে নিন : https://console.aws.amazon.com/iam/
+Secret Key : ?
+Region: us-east-1 (অথবা আপনার পছন্দ)
+Output format: json
+
+
+4. ECR (Elastic Container Registry) তে ইমেজ পাঠানো
+==================================================
+🏗️ ১. ECR রেপো তৈরি:
+aws ecr create-repository --repository-name dbbl-ocr-app
+Output থেকে repositoryUri কপি করে রাখুন:
+
+<your_aws_account_id>.dkr.ecr.us-east-1.amazonaws.com/dbbl-ocr-app
+
+🔐 ২. ECR-এ Login করুন:
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <your_account_id>.dkr.ecr.us-east-1.amazonaws.com
+
+🐳 ৩. Docker Image Tag করুন:
+docker tag dbbl-ocr-app <your_account_id>.dkr.ecr.us-east-1.amazonaws.com/dbbl-ocr-app
+
+🚀 ৪. Docker Image Push করুন:
+docker push <your_account_id>.dkr.ecr.us-east-1.amazonaws.com/dbbl-ocr-app
+
+
+5. AWS App Runner দিয়ে Deploy করুন (GUI Interface ব্যবহার করে)
+===========================================================
+🔗 Console এ যান:
+👉 https://console.aws.amazon.com/apprunner
+
+➕ Create service এ ক্লিক করুন:
+Source type:
+✅ Container registry
+✅ Provider: Amazon ECR
+✅ Select Private এবং আপনার পুশ করা ইমেজ সিলেক্ট করুন
+
+Deployment settings:
+✅ Manual বা Automatic update চাইলে নির্বাচন করুন
+
+Service settings:
+✅ Name: dbbl-ocr-app
+✅ Port: 8080
+
+Environment variables:
+PYTHONUNBUFFERED=1
+GUNICORN_CMD_ARGS=--workers=3 --timeout=120
+
+Instance configuration:
+RAM: Max 4GB
+CPU: Max 2 vCPU
+(App Runner এর লিমিট)
+
+✅ Create and Deploy
+
+
+
+6. Live URL পেয়ে যাবেন
+======================
+Deploy হলে App Runner একটা Public URL দিবে। ওটাই আপনার OCR API endpoint 🎯
